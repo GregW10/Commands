@@ -198,23 +198,16 @@ int main() {
     char *PDF = malloc(PDFlen);
     char finalPDF[264] = {0};
     memset_c(PDF, 0, PDFlen);
-    wchar_t shit[1000] = {0};
     while ((entry = readdir(dir)) != NULL) {
         if (endswith(entry->d_name, ".pdf")) {
             strcpy_c(PDF, srcDir); strcat_c(PDF, "\\"); strcat_c(PDF, entry->d_name);
             stat64(PDF, &buffer);
-            wprintf(L"entry->d_name: %s and mtime: %zu\n", entry->d_name, buffer.st_mtime);
-            mbstowcs(shit, entry->d_name, 1000);
-            wprintf(L"The wide string: %s\n", shit);
             FILE *fp = fopen(entry->d_name, "rb");
             if (fp == NULL) {
                 fprintf(stderr, "NULL again.\n");
                 return -1;
             }
             fclose(fp);
-            // for (size_t i = 0; i < 150; ++i) {
-            //     printf("%c\n", entry->d_name[i]);
-            // }
             printf("what: %d\n", entry->d_name[2]);
             if (buffer.st_mtime > mtime) {
                 mtime = buffer.st_mtime;
