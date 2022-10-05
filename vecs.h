@@ -59,8 +59,8 @@ static inline void print_vec_ld(const vector_ld *v, unsigned char dp, bool newli
 
 static inline void print_vec_ll(const vector_ll *v, bool newline) {
     printf("%lldi ", v->x);
-    printf(v->y < 0 ? "- %lldj " : "+ %lldj", ABS(v->y));
-    printf(v->z < 0 ? "- %lldk%c" : " + %lldk%c", ABS(v->z), newline ? '\n' : 0);
+    printf(v->y < 0 ? " - %lldj " : "+ %lldj", ABS(v->y));
+    printf(v->z < 0 ? " - %lldk%s" : " + %lldk%s", ABS(v->z), newline ? "\n" : "");
 }
 
 static inline long double dot_ld(const vector_ld *v1, const vector_ld *v2) {
@@ -113,7 +113,7 @@ static inline vector_ld mul_s_vec(long double s, const vector_ld *v) {
         fprintf(stderr, "The vector_ld passed to the mul_s_vec() function is NULL.\n");
         abort();
     }
-    vector_ld ret = {s * v->x, s * v->y, s * v->z};
+    vector_ld ret = {s*v->x, s*v->y, s*v->z};
     return ret;
 }
 
@@ -122,7 +122,7 @@ static inline vector_ld div_vec_s(const vector_ld *v, long double s) {
         fprintf(stderr, "The vector_ld passed to the mul_s_vec() function is NULL.\n");
         abort();
     }
-    vector_ld ret = {v->x / s, v->y / s, v->z / s};
+    vector_ld ret = {v->x/s, v->y/s, v->z/s};
     return ret;
 }
 

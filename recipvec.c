@@ -44,19 +44,15 @@ static inline vector_ld b3(const vector_ld *a1, const vector_ld *a2, const vecto
 }
 
 int main(int argc, char **argv) {
-
     vector_ld a1;
     vector_ld a2;
     vector_ld a3;
-
     vector_ld b1_v;
     vector_ld b2_v;
     vector_ld b3_v;
-
     unsigned char dp = 10;
     unsigned char dp_index;
     bool has_dp = false;
-
     if (argc <= 2) {
         if (argc == 2) {
             process_args(&dp, &dp_index, NULL, &has_dp, argc, argv);
@@ -79,9 +75,9 @@ int main(int argc, char **argv) {
             a2.x = strtold(*(argv + (4 < dp_index ? 4 : 5)), NULL);
             a2.y = strtold(*(argv + (5 < dp_index ? 5 : 6)), NULL);
             a2.z = strtold(*(argv + (6 < dp_index ? 6 : 7)), NULL);
-            a3.x = strtold(*(argv + (7 < dp_index ? 4 : 8)), NULL);
-            a3.y = strtold(*(argv + (8 < dp_index ? 5 : 9)), NULL);
-            a3.z = strtold(*(argv + (9 < dp_index ? 6 : 10)), NULL);
+            a3.x = strtold(*(argv + (7 < dp_index ? 7 : 8)), NULL);
+            a3.y = strtold(*(argv + (8 < dp_index ? 8 : 9)), NULL);
+            a3.z = strtold(*(argv + (9 < dp_index ? 9 : 10)), NULL);
         }
         else {
             a1.x = strtold(*(argv + 1), NULL);
