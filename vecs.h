@@ -59,8 +59,8 @@ static inline void print_vec_ld(const vector_ld *v, unsigned char dp, bool newli
 
 static inline void print_vec_ll(const vector_ll *v, bool newline) {
     printf("%lldi ", v->x);
-    printf(v->y < 0 ? " - %lldj " : "+ %lldj", ABS(v->y));
-    printf(v->z < 0 ? " - %lldk%s" : " + %lldk%s", ABS(v->z), newline ? "\n" : "");
+    printf(v->y < 0 ? "- %lldj " : "+ %lldj ", ABS(v->y));
+    printf(v->z < 0 ? "- %lldk%s" : "+ %lldk%s", ABS(v->z), newline ? "\n" : "");
 }
 
 static inline long double dot_ld(const vector_ld *v1, const vector_ld *v2) {
