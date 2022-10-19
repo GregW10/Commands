@@ -17,7 +17,7 @@
 #include <pwd.h>
 #endif
 
-#define MAX_INT -2147483648
+#define MAX_INT (-2147483648)
 
 typedef enum {
     false, true
@@ -104,7 +104,7 @@ void free_ptrs(size_t numPointers, ...) {
     va_end(ptr);
 }
 
-char *getHomePath() {
+char *getHomePath(void) {
     char *retptr;
 #ifdef _WIN32
     retptr = malloc(PATH_MAX);
@@ -120,7 +120,7 @@ char *getHomePath() {
     return retptr;
 }
 
-int main() {
+int main(void) {
     char *homePath = getHomePath();
     size_t HPlen = strlen_c(homePath);
     char *srcDir = malloc(HPlen + 12);
@@ -132,24 +132,24 @@ int main() {
     strcat_c(srcDir, "/Downloads");
 #endif
     strcpy_c(destDir, homePath);
-    free(homePath);
 #ifdef _WIN32
+    free(homePath);
     strcat_c(destDir, "\\ProjectReading");
 #else
     strcat_c(destDir, "/ProjectReading");
 #endif
-    struct stat64 buffer = {};
-    if (stat64(srcDir, &buffer) == -1) {
+    struct stat buffer = {0};
+    if (stat(srcDir, &buffer) == -1) {
         free_ptrs(2, srcDir, destDir);
         fprintf(stderr, "Downloads folder does not exist.\n");
-        return -1;
+        return 1;
     }
     if (!S_ISDIR(buffer.st_mode)) {
         free_ptrs(2, srcDir, destDir);
         fprintf(stderr, "Downloads folder is actually a file.\n");
-        return -1;
+        return 1;
     }
-    if (stat64(destDir, &buffer) == -1) {
+    if (stat(destDir, &buffer) == -1) {
 #ifdef _WIN32
         if (mkdir(destDir) == -1) {
 #else
@@ -157,7 +157,7 @@ int main() {
 #endif
             free_ptrs(2, srcDir, destDir);
             fprintf(stderr, "Destination directory \"%s\" does not exist nor could be created.\n", destDir);
-            return -1;
+            return 1;
         }
     }
     else if (!S_ISDIR(buffer.st_mode)) { // in case the dest. dir. is a file
@@ -173,11 +173,11 @@ int main() {
             }
             endptr -= 10;
         } while(rename(destDir, tempDir) == -1 && count++ < 1000000); // attempt to rename the file
-        struct stat64 tempBuff = {};
-        if (stat64(tempDir, &tempBuff) == -1) {
+        struct stat tempBuff = {0};
+        if (stat(tempDir, &tempBuff) == -1) {
             free_ptrs(3, srcDir, destDir, tempDir);
             fprintf(stderr, "Destination file is not a directory, nor could it be renamed.\n");
-            return -1;
+            return 1;
         }
 #ifdef _WIN32
         if (mkdir(destDir) == -1) {
@@ -187,7 +187,7 @@ int main() {
             free_ptrs(3, srcDir, destDir, tempDir);
             fprintf(stderr, "Destination file was not a directory, so was renamed to \"%s\", but destination\n"
                             "directory could still not be created.\n", tempDir);
-            return -1;
+            return 1;
         }
         free(tempDir);
     }
@@ -200,15 +200,20 @@ int main() {
     memset_c(PDF, 0, PDFlen);
     while ((entry = readdir(dir)) != NULL) {
         if (endswith(entry->d_name, ".pdf")) {
-            strcpy_c(PDF, srcDir); strcat_c(PDF, "\\"); strcat_c(PDF, entry->d_name);
-            stat64(PDF, &buffer);
-            FILE *fp = fopen(entry->d_name, "rb");
+            strcpy_c(PDF, srcDir);
+#ifdef _WIN32
+            strcat_c(PDF, "\\");
+#else
+            strcat_c(PDF, "/");
+#endif
+            strcat_c(PDF, entry->d_name);
+            stat(PDF, &buffer);
+            FILE *fp = fopen(PDF, "rb");
             if (fp == NULL) {
                 fprintf(stderr, "NULL again.\n");
-                return -1;
+                return 1;
             }
             fclose(fp);
-            printf("what: %d\n", entry->d_name[2]);
             if (buffer.st_mtime > mtime) {
                 mtime = buffer.st_mtime;
 #ifdef _WIN32
@@ -224,9 +229,8 @@ int main() {
     if (*PDF == 0) {
         free_ptrs(3, srcDir, destDir, PDF);
         fprintf(stderr, "No PDF file found in Downloads folder.\n");
-        return -1;
+        return 1;
     }
-    printf("PDF: %s\n", PDF);
     free(PDF);
     size_t flen = strlen_c(finalPDF);
     char *srcFile = malloc(HPlen + 12 + flen + 1);
@@ -243,7 +247,7 @@ int main() {
     if (dest == NULL) {
         free_ptrs(4, srcDir, destDir, srcFile, destFile);
         fprintf(stderr, "Error opening destination file: %s\n", destFile);
-        return -1;
+        return 1;
     }
     int c;
     while ((c = fgetc(src)) != EOF) {
@@ -254,9 +258,9 @@ int main() {
     if (remove(srcFile)) {
         free_ptrs(3, srcDir, destDir, srcFile);
         fprintf(stderr, "Error deleting source file: %s\n", srcFile);
-        return -1;
+        return 1;
     }
     free_ptrs(3, srcFile, srcDir, destDir);
-    printf("Successfully moved: %s\n", &finalPDF[1]);
+    printf("Successfully moved: %s\n", finalPDF + 1);
     return 0;
 }
