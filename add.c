@@ -142,6 +142,5 @@ int main(int argc, char **argv) {
 	}
 	if (is_floating) printf(get_dp_str(&dp), total);
 	else printf("%.0Lf\n", total);
-	printf("dp = %d\n", dp);
 	return 0;
 }
