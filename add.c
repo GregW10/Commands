@@ -34,6 +34,7 @@ void print_non_numeric(const char *str) {
 	if (str == NULL || is_numeric(str))
 		return;
 	fputs(str, stderr);
+	fputc('\n', stderr);
 	if (*str == '-') {
 		fputc('~', stderr);
 		++str;
