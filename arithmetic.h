@@ -126,8 +126,9 @@ long long strcmp_c(const char *restrict s1, const char *restrict s2) {
 	if (s1 == NULL || s2 == NULL)
 		return -128;
 	while (*s1 && *s2) {
-		if (*s1++ != *s2++)
+		if (*s1 != *s2)
 			return *s1 - *s2;
+		++s1; ++s2;
 	}
 	return *s1 - *s2;
 }
