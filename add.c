@@ -41,7 +41,6 @@ int main(int argc, char **argv) {
 		else
 			prev_count = 0;
 	}
-	size_t max = -1;
 	char **ptr = argv + 1;
 	long double sum = 0;
 	unsigned int dp = 10;

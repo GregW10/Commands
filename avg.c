@@ -19,9 +19,6 @@ int main(int argc, char **argv) {
 			fputs("\n... nor specifies previous result using \"prev\".\n", stderr);
 			return 1;
 		}
-		//if (strcmp_c(*(argv + 1), "prev") == 0) {
-		//	++prev_count;
-		//}
 		get_prev_num(path, &prev, NULL);
 		tot_prev = prev;
 		tot_prev_squared = prev*prev;
