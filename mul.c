@@ -21,6 +21,26 @@ int main(int argc, char **argv) {
 		tot_prev = prev;
 		++prev_count;
 	}
+	if (argc == 3) {
+		bool prev1 = strcmp_c(*(argv + 1), "prev") == 0;
+		bool prev2 = strcmp_c(*(argv + 2), "prev") == 0;
+		bool num1 = is_numeric(*(argv + 1));
+		bool num2 = is_numeric(*(argv + 2));
+		if (!prev1 && !prev2 && !num1 && !num2) {
+			fprintf(stderr, "Arguments \"%s\" and \"%s\" are not numeric:\n", *(argv + 1), *(argv + 2));
+			print_non_numeric(*(argv + 1));
+			print_non_numeric(*(argv + 2));
+			fputs("\n... nor specify previous result using \"prev\".\n", stderr);
+			return 1;
+		}
+		prev_count = prev1 + prev2;
+		if (prev_count + num1 + num2 == 1) {
+			get_prev_num(path, &prev, NULL);
+			tot_prev = prev;
+		}
+		else
+			prev_count = 0;
+	}
 	char **ptr = argv + 1;
 	long double product = 1;
 	unsigned int dp = 10;

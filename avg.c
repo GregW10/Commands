@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
 	long double tot_prev = 0;
 	long double tot_prev_squared = 0;
 	int prev_count = 0;
+	int divisor = 0; // int since can't be greater than argc anyways
 	if (argc == 2) {
 		if (!is_numeric(*(argv + 1)) && strcmp_c(*(argv + 1), "prev") != 0) {
 			fprintf(stderr, "Argument \"%s\" is not numeric:\n", *(argv + 1));
@@ -18,10 +19,61 @@ int main(int argc, char **argv) {
 			fputs("\n... nor specifies previous result using \"prev\".\n", stderr);
 			return 1;
 		}
+		//if (strcmp_c(*(argv + 1), "prev") == 0) {
+		//	++prev_count;
+		//}
 		get_prev_num(path, &prev, NULL);
 		tot_prev = prev;
 		tot_prev_squared = prev*prev;
 		++prev_count;
+		++divisor;
+	}
+	if (argc == 3) {
+		bool prev1 = strcmp_c(*(argv + 1), "prev") == 0;
+		bool prev2 = strcmp_c(*(argv + 2), "prev") == 0;
+		bool num1 = is_numeric(*(argv + 1));
+		bool num2 = is_numeric(*(argv + 2));
+		if (!prev1 && !prev2 && !num1 && !num2) {
+			fprintf(stderr, "Arguments \"%s\" and \"%s\" are not numeric:\n", *(argv + 1), *(argv + 2));
+			print_non_numeric(*(argv + 1));
+			print_non_numeric(*(argv + 2));
+			fputs("\n... nor specifies previous result using \"prev\".\n", stderr);
+			return 1;
+		}
+		prev_count = prev1 + prev2;
+		if (prev_count + num1 + num2 == 1) {
+			get_prev_num(path, &prev, NULL);
+			tot_prev = prev;
+			tot_prev_squared = prev*prev;
+			++divisor;
+		}
+		else
+			prev_count = 0;
+	}
+	if (argc == 4) {
+		bool prev1 = strcmp_c(*(argv + 1), "prev") == 0;
+		bool prev2 = strcmp_c(*(argv + 2), "prev") == 0;
+		bool prev3 = strcmp_c(*(argv + 2), "prev") == 0;
+		bool num1 = is_numeric(*(argv + 1));
+		bool num2 = is_numeric(*(argv + 2));
+		bool num3 = is_numeric(*(argv + 2));
+		if (!prev1 && !prev2 && !prev3 && !num1 && !num2 && !num3) {
+			fprintf(stderr, "Arguments \"%s\", \"%s\" and \"%s\" are not numeric:\n", *(argv + 1), *(argv + 2), *(argv + 3));
+			print_non_numeric(*(argv + 1));
+			print_non_numeric(*(argv + 2));
+			print_non_numeric(*(argv + 3));
+			fputs("\n... nor specify previous result using \"prev\".\n", stderr);
+			return 1;
+		}
+		prev_count = prev1 + prev2 + prev3;
+		if (prev_count + num1 + num2 + num3 == 1) {
+			get_prev_num(path, &prev, NULL);
+			tot_prev = prev;
+			tot_prev_squared = prev*prev;
+			++divisor;
+		}
+		else
+			prev_count = 0;
 	}
 	char **ptr = argv + 1;
 	long double total = 0;
@@ -37,11 +89,13 @@ int main(int argc, char **argv) {
 				if (prev_count++ > 0) {
 					tot_prev += prev;
 					tot_prev_squared += prev*prev;
+					++divisor;
 					continue;
 				}
 				get_prev_num(path, &prev, NULL);
 				tot_prev = prev;
 				tot_prev_squared = prev*prev;
+				++divisor;
 				continue;
 			}
 			else if (strcmp_c(*ptr, "sd") == 0) {
@@ -75,10 +129,10 @@ int main(int argc, char **argv) {
 		}
 		total += (val = get_fp(*ptr));
 		squared_total += val*val;
+		++divisor;
 	}
 	total += tot_prev;
 	squared_total += tot_prev_squared;
-	int divisor = argc - !(argc == 2 && prev_count == 1) - has_dp - has_sd;
 	long double avg = total/divisor;
 	long double sd = sqrtl(squared_total/divisor - avg*avg);
 	sd_floating = !(sd == ceill(sd));
