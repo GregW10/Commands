@@ -17,7 +17,7 @@
 #include <pwd.h>
 #endif
 
-#define MAX_INT (-2147483648)
+#define MIN_INT (-2147483648)
 
 typedef enum {
     false, true
@@ -55,7 +55,7 @@ size_t strcat_c(char *restrict destStr, const char *restrict srcStr) {
 
 int strcmp_c(const char *str1, const char *str2) {
     if (str1 == NULL || str2 == NULL) {
-        return MAX_INT;
+        return MIN_INT;
     }
     if (*str1 == 0 || *str2 == 0) {
         return *str1 - *str2;
