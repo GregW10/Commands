@@ -228,14 +228,14 @@ void process_args(unsigned char *dp, unsigned char *dp_index, bool *is_fp, bool 
     for (unsigned char i = 1; i < argc; ++i) {
         if (!is_numeric(*(argv + i), is_fp)) {
             ptr = *(argv + i);
-            if (*ptr++ != 'd' && *ptr++ != 'p' && *ptr++ != '=' && !is_numeric(ptr, NULL)) {
+            if (strlen_c(ptr) < 4 || *ptr++ != 'd' || *ptr++ != 'p' || *ptr++ != '=' || !is_numeric(ptr, NULL)) {
                 fprintf(stderr, "Argument: \"%s\" is not numeric nor specifies decimal places "
                                 "(as \"dp=...\").\n", *(argv + i));
-                exit(-1);
+                exit(1);
             }
             if (*has_dp) {
                 fprintf(stderr, "Decimal places cannot be specified more than once (using \"dp=...\").\n");
-                exit(-1);
+                exit(1);
             }
             *dp_index = i;
             *has_dp = true;

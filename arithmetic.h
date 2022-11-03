@@ -140,7 +140,7 @@ void print_non_numeric(const char *str) {
 			continue;
 		}
 		else if (*str == '.') {
-			if (point_count++ <= 1) {
+			if (point_count++ < 1) {
 				fputc('~', stderr);
 				continue;
 			}
