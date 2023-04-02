@@ -61,11 +61,11 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "Error: first file \"%s\" does not exist.\n", *ptr);
 		return 1;
 	}
-    const size_t f_size = buff.st_size;
-    size_t fcounter;
-    printf("File identical to \"%s\"?\n", *ptr);
-    const char *b1;
-    const char *b2;
+	const size_t f_size = buff.st_size;
+	size_t fcounter;
+	printf("File identical to \"%s\"?\n", *ptr);
+	const char *b1;
+	const char *b2;
 	if (buff.st_size < lim) {
 		FILE *fp = fopen(*ptr++, "rb");
 		if (!fp) {
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 		}
 		fread(buffer, buff.st_size, 1, fp);
 		fclose(fp);
-        loop_start:
+        	loop_start:
 		for (; counter --> 0; ++ptr) {
 			fp = fopen(*ptr, "rb");
 			if (!fp) {
@@ -91,57 +91,57 @@ int main(int argc, char **argv) {
 				fprintf(stderr, "Error: file \"%s\" does not exist.\n", *ptr);
 				return 1;
 			}
-            if (buff.st_size != f_size) {
-                printf("\"%s\": NO\n", *ptr);
-                continue;
-            }
+            		if (buff.st_size != f_size) {
+                		printf("\"%s\": NO\n", *ptr);
+                		continue;
+            		}
 			fread(buffer2, buff.st_size, 1, fp);
 			fclose(fp);
-            fcounter = f_size;
-            b1 = buffer;
-            b2 = buffer2;
-            while (fcounter --> 0) {
-                if (*b1++ != *b2++) {
-                    printf("\"%s\": NO\n", *ptr++);
-                    goto loop_start;
-                }
-            }
-            printf("\"%s\": YES\n", *ptr);
+            		fcounter = f_size;
+            		b1 = buffer;
+            		b2 = buffer2;
+            		while (fcounter --> 0) {
+                		if (*b1++ != *b2++) {
+                    		printf("\"%s\": NO\n", *ptr++);
+                    		goto loop_start;
+                		}
+			}
+			printf("\"%s\": YES\n", *ptr);
 		}
 	} else {
 		FILE *fp1 = fopen(*ptr++, "rb");
-        if (!fp1) {
-            fprintf(stderr, "Error opening file: \"%s\"\n", *--ptr);
-            return 1;
-        }
-        FILE *fp2;
-        loop2_start:
-        for (; counter --> 0; ++ptr) {
-            if (stat(*ptr, &buff) == -1) {
-                fprintf(stderr, "Error: file \"%s\" does not exist.\n", *ptr);
-                return 1;
-            }
-            if (buff.st_size != f_size) {
-                printf("\"%s\": NO\n", *ptr);
-                continue;
-            }
-            fp2 = fopen(*ptr, "rb");
-            if (!fp2) {
-                fprintf(stderr, "Error opening file: \"%s\"\n", *ptr);
-                return 1;
-            }
-            fcounter = f_size;
-            while (fcounter --> 0) {
-                if (fgetc(fp1) != fgetc(fp2)) {
-                    printf("\"%s\": NO\n", *ptr++);
-                    goto loop2_start;
-                }
-            }
-            fclose(fp2);
-            fseek(fp1, 0, SEEK_SET);
-            printf("\"%s\": YES\n", *ptr);
-        }
-        fclose(fp1);
+        	if (!fp1) {
+            	fprintf(stderr, "Error opening file: \"%s\"\n", *--ptr);
+            	return 1;
+        	}
+        	FILE *fp2;
+        	loop2_start:
+        	for (; counter --> 0; ++ptr) {
+            		if (stat(*ptr, &buff) == -1) {
+                		fprintf(stderr, "Error: file \"%s\" does not exist.\n", *ptr);
+                		return 1;
+            		}
+            		if (buff.st_size != f_size) {
+                		printf("\"%s\": NO\n", *ptr);
+                		continue;
+            		}
+            		fp2 = fopen(*ptr, "rb");
+            		if (!fp2) {
+                		fprintf(stderr, "Error opening file: \"%s\"\n", *ptr);
+                		return 1;
+            		}
+            		fcounter = f_size;
+            		while (fcounter --> 0) {
+                		if (fgetc(fp1) != fgetc(fp2)) {
+                    		printf("\"%s\": NO\n", *ptr++);
+                    		goto loop2_start;
+                		}
+            		}
+            		fclose(fp2);
+            		fseek(fp1, 0, SEEK_SET);
+            		printf("\"%s\": YES\n", *ptr);
+        	}
+        	fclose(fp1);
 	}
 	return 0;
 }
