@@ -36,7 +36,7 @@ size_t to_size_t(const char *str) {
 int main(int argc, char **argv) {
 	if (argc < 3) {
 		fprintf(stderr, "Error: invalid number of command-line arguments.\n"
-				"Usage: ./iden [opt:RAM_limit] <file1> <file2> [opt:further_files...]");
+				"Usage: ./iden [opt:RAM_limit] <file1> <file2> [opt:further_files...]\n");
 		return 1;
 	}
 	size_t lim;
